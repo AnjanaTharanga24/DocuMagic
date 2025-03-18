@@ -1,0 +1,29 @@
+<div class="container">
+  <h2>PDF to Image Converter</h2>
+  
+  <div class="upload-section">
+    <label for="file-upload" class="custom-file-upload">
+      Choose PDF File
+    </label>
+    <input id="file-upload" type="file" accept=".pdf" (change)="onFileSelected($event)" />
+    
+    <span *ngIf="selectedFile" class="file-name">
+      {{ selectedFile?.name }}
+    </span>
+    
+    <button [disabled]="!selectedFile" (click)="convertPdf()" class="convert-btn">
+      Convert to Image
+    </button>
+  </div>
+  
+  <div  class="result-section">
+    <h3>Converted Image</h3>
+    <img [src]="convertedImage" alt="Converted PDF" class="converted-image" />
+    
+    <div class="action-buttons">
+      <button (click)="downloadImage()" class="download-btn">
+        <span class="download-icon">⬇️</span> Download Image
+      </button>
+    </div>
+  </div>
+</div>

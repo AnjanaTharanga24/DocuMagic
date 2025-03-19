@@ -11,19 +11,33 @@
       {{ selectedFile?.name }}
     </span>
     
-    <button [disabled]="!selectedFile" (click)="convertPdf()" class="convert-btn">
-      Convert to Image
+    <button [disabled]="!selectedFile || loading" (click)="convertPdf()" class="convert-btn">
+      <span *ngIf="!loading">Convert to Image</span>
+      <span *ngIf="loading" class="loading-spinner-btn">
+        <span class="spinner-small"></span>
+      </span>
     </button>
   </div>
   
-  <div  class="result-section">
-    <h3>Converted Image</h3>
-    <img [src]="convertedImage" alt="Converted PDF" class="converted-image" />
-    
-    <div class="action-buttons">
-      <button (click)="downloadImage()" class="download-btn">
-        <span class="download-icon">⬇️</span> Download Image
-      </button>
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Converting PDF...</p>
+  </div>
+  
+  <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <span class="close-button" (click)="closeModal()">&times;</span>
+      
+      <div class="result-section">
+        <h3>Converted Image</h3>
+        <img [src]="convertedImage" alt="Converted PDF" class="converted-image" />
+        
+        <div class="action-buttons">
+          <button (click)="downloadImage()" class="download-btn">
+            <span class="download-icon">⬇️</span> Download Image
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

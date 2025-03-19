@@ -1,51 +1,57 @@
 import { Component } from '@angular/core';
-import axios from 'axios';
+import { PdfService } from '../../service/pdf.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
   selectedFile: File | null = null;
   convertedImage: string | null = null;
-  isLoading = false;
-  errorMessage: string | null = null;
-  imageBlob: Blob | null = null;
+  showModal: boolean = false;
+  loading: boolean = false;
+
+  constructor(private pdfService: PdfService) {} 
 
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
     this.convertedImage = null;
   }
 
-  async convertPdf(){
+  async convertPdf() {
     if (!this.selectedFile) {
       return;
     }
-
-    const formData = new FormData();
-    formData.append('file', this.selectedFile);
-
+    
+    this.loading = true;
+    
     try {
-      const response = await axios.post('http://localhost:8080/convert', formData, {
-        responseType: 'arraybuffer', 
-      });
-
-      const blob = new Blob([response.data], { type: 'image/png' });
-      this.convertedImage = URL.createObjectURL(blob);
+      const imageBlob = await this.pdfService.convertPdfToImage(this.selectedFile);
+      if (imageBlob) {
+        this.convertedImage = URL.createObjectURL(imageBlob);
+        this.showModal = true;
+      }
     } catch (error) {
-      console.error('Failed to convert PDF to image:', error);
+      console.error('Error converting PDF:', error);
+    } finally {
+      this.loading = false;
     }
   }
 
-  downloadImage(): void {
+  downloadImage() {
     if (this.convertedImage) {
       const link = document.createElement('a');
       link.href = this.convertedImage;
       link.download = 'converted-image.png';
       link.click();
     }
+  }
+  
+  closeModal(){
+    this.showModal = false;
   }
 }

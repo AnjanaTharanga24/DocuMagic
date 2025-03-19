@@ -1,0 +1,11 @@
+
+.main-bg {
+    background: linear-gradient(135deg, #444e4e 0%, #dde0e4 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}

@@ -42,7 +42,7 @@ export class HomeComponent {
         (response: ArrayBuffer) => {
           const blob = new Blob([response], { type: 'image/png' });
           const imageUrl = URL.createObjectURL(blob);
-          this.convertedImage = imageUrl; // Set the image URL
+          this.convertedImage = imageUrl; 
           this.isLoading = false;
         },
         (error) => {
